@@ -13,4 +13,10 @@ public class UserService {
     public List<User> allUsers(){
         return userRepository.findAll();
     }
+
+    public boolean isEmailAlreadyInUse(String email){
+        return userRepository.existsByEmail(email);
+    }
+
+
  }
