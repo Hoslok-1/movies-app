@@ -29,5 +29,28 @@ public class UserController {
         }
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
+
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user){
+        try {
+
+            if (!userService.isEmailAlreadyInUse(user.getEmail())) {
+                return ResponseEntity.badRequest().body("User not found");
+            }
+
+            User existingUser = userRepository.findByEmail(user.getEmail());
+
+            if (!existingUser.getPassword().equals(user.getPassword())) {
+                return ResponseEntity.badRequest().body("Incorrect password");
+            }
+
+            return ResponseEntity.ok("Login successful");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("internal server error");
+        }
     }
 }
